@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import {
-    onMounted,
-    ref,
     nextTick,
+    onMounted,
     onUnmounted,
+    ref,
     Transition,
     watch,
 } from 'vue';
 
+import axios from 'axios';
 import hljs from 'highlight.js';
 import MarkdownIt from 'markdown-it';
 
@@ -303,7 +304,9 @@ onUnmounted(() => {
                 <a href="/products" class="text-primary hover:underline">Products</a>
                 <Button @click="toggleDarkMode" variant="outline" size="icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                        <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.06l1.591-1.59ZM12 18a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V18a.75.75 0 0 1 .75-.75ZM5.007 17.234a.75.75 0 1 0-1.06-1.06l-1.59 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM5.007 6.766a.75.75 0 0 0-1.06-1.06L2.356 7.297a.75.75 0 1 0 1.06 1.06l1.59-1.59ZM18.894 17.234a.75.75 0 1 0 1.06 1.06l1.591-1.59a.75.75 0 0 0-1.06-1.06l-1.591 1.59ZM3 12a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5H3a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+                        <path
+                            d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.06l1.591-1.59ZM12 18a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V18a.75.75 0 0 1 .75-.75ZM5.007 17.234a.75.75 0 1 0-1.06-1.06l-1.59 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM5.007 6.766a.75.75 0 0 0-1.06-1.06L2.356 7.297a.75.75 0 1 0 1.06 1.06l1.59-1.59ZM18.894 17.234a.75.75 0 1 0 1.06 1.06l1.591-1.59a.75.75 0 0 0-1.06-1.06l-1.591 1.59ZM3 12a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5H3a.75.75 0 0 1-.75-.75Z"
+                            clip-rule="evenodd" />
                     </svg>
                 </Button>
             </div>
@@ -345,13 +348,13 @@ onUnmounted(() => {
                             class="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border bg-background">
                             AI
                         </div>
-                        <div class="max-w-[70%] rounded-xl p-4"
-                            :class="{
-                                'bg-primary text-primary-foreground': message.role === 'user',
-                                'bg-muted': message.role === 'assistant'
-                            }">
+                        <div class="max-w-[70%] rounded-xl p-4" :class="{
+                            'bg-primary text-primary-foreground': message.role === 'user',
+                            'bg-muted': message.role === 'assistant'
+                        }">
                             <div v-html="renderMarkdown(message.content)"></div>
-                            <img v-if="message.imageUrl" :src="message.imageUrl" class="mt-2 max-h-48 rounded-lg object-cover" />
+                            <img v-if="message.imageUrl" :src="message.imageUrl"
+                                class="mt-2 max-h-48 rounded-lg object-cover" />
                         </div>
                         <div v-if="message.role === 'user'"
                             class="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border bg-background">
@@ -410,7 +413,8 @@ onUnmounted(() => {
                                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 00-2.828 0L6 14m6-6v6m0 0v6m0-6h6m-6 0H6" />
                             </svg>
                         </Button>
-                        <textarea v-model="prompt" @keydown.enter.prevent="sendMessageOnEnter" placeholder="Type your message..."
+                        <textarea v-model="prompt" @keydown.enter.prevent="sendMessageOnEnter"
+                            placeholder="Type your message..."
                             class="flex-1 p-2.5 text-sm rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none overflow-hidden"
                             :disabled="isLoading" rows="1" ref="promptTextarea"></textarea>
                         <Button @click="sendMessage" :disabled="isLoading || (!prompt && !image)" class="shrink-0">
