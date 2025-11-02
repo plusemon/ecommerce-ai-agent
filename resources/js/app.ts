@@ -1,4 +1,5 @@
 import '../css/app.css';
+import 'highlight.js/styles/github-dark.css';
 
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';

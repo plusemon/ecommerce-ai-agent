@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 
@@ -12,3 +13,5 @@ Route::delete('/conversations/{conversation}', [ChatController::class, 'deleteCo
 Route::post('/send-message', [ChatController::class, 'sendMessage'])->name('conversations.send')->withoutMiddleware(
     VerifyCsrfToken::class
 );
+
+Route::resource('products', ProductController::class)->except(['show']);
