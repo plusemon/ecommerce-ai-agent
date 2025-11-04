@@ -4,7 +4,6 @@ import {
     onMounted,
     onUnmounted,
     ref,
-    Transition,
     watch,
 } from 'vue';
 
@@ -13,7 +12,6 @@ import hljs from 'highlight.js';
 import MarkdownIt from 'markdown-it';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
     Head,
     router,
@@ -245,11 +243,13 @@ const toggleDarkMode = () => {
 
 onMounted(() => {
     md = new MarkdownIt({
-        highlight: function (str, lang) {
+        highlight: function (str: string, lang: string) {
             if (lang && hljs.getLanguage(lang)) {
                 try {
                     return hljs.highlight(str, { language: lang }).value;
-                } catch (__) { }
+                } catch (e) {
+                    console.error(e);
+                }
             }
 
             return ''; // use external default escaping

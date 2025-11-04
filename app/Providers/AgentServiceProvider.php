@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Services\AgentService;
+use Illuminate\Support\ServiceProvider;
 
 class AgentServiceProvider extends ServiceProvider
 {
@@ -13,7 +13,7 @@ class AgentServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(AgentService::class, function ($app) {
-            return new AgentService();
+            return new AgentService;
         });
     }
 
